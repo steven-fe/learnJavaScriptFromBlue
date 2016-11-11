@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>功能表格</title>
+	<style>
+		
+		*{
+			padding:0;
+			margin:0;
+		}
+
+		tbody tr{
+			background-color:#fff;
+		}
+		tbody tr:hover{
+			background-color:yellow;
+		}
+		.bgColor{
+			background-color:#ccc;
+		}
+		.notSearched{
+			display:none;
+		}
+		.searched{
+			background-color:red;
+		}
+
+
+	</style>
+	<script>
+		
+		window.onload = function(){
+
+			var oTable = document.getElementById("tab1"),
+				oBody = oTable.tBodies[0],
+				oName = document.getElementById("name"),
+				oAge = document.getElementById("age"),
+				oAdd = document.getElementById("btn"),
+				oDelete = document.getElementsByClassName("delete"),
+				oSearch = document.getElementById("search"),
+				sSearch = document.getElementById("searchText"),
+				oSort = document.getElementById("sort"),
+				evenClass = "bgColor",
+				notSearchedClass = "notSearched",
+				searchedClass = "searched";
+
+			function compare(tr1,tr2){
+				return parseInt(tr1.cells[2].innerHTML)-parseInt(tr2.cells[2].innerHTML);
+			}
+
+			oSort.onclick = function(){
+
+				var oTr = oBody.rows;
+				var len = oTr.length;
+				var arr = [];
+				
+				for(var i=0;i<len;i++){
+					arr.push(oTr[i]);
+				}
+				
+				arr = arr.sort(compare);
+				for(var i=0;i<len;i++){
+					oBody.appendChild(arr[i]);
+				}
+
+				afterDelete(0);//排序之后，需要更改表格的样式
+
+			}
+
+			oAdd.onclick = function(){
+				var sName = oName.value;
+				var sAge = oAge.value;
+				var msg = [oBody.rows.length+1,sName,sAge,"<a href='javascript:;' class='delete'>删除</a>"];
+				var len = msg.length;
+
+				var oTr = document.createElement("tr");
+				for(var i=0;i<len;i++){
+					var oTd = document.createElement("td");
+					oTd.innerHTML = msg[i];
+					oTr.appendChild(oTd);
+				}
+				if(!(oBody.rows.length%2)){
+					oTr.className = evenClass;
+				}
+				oTr.cells[3].children[0].onclick = function(){
+					deleteTr(this);
+				};
+				oBody.appendChild(oTr);
+			}
+
+			oSearch.onclick =function(){
+				var text = sSearch.value.toLowerCase().split(" ");
+				var rLen = oBody.rows.length;
+
+				for(var i=0;i<rLen;i++){
+					//行循环
+					var cells = oBody.rows[i].cells
+					var cLen = cells.length;
+					oBody.rows[i].className += " "+notSearchedClass;
+					for(var j=0;j<cLen;j++){
+						//列循环
+						for(var k=0;k<text.length;k++){
+							//文字循环
+							if(cells[j].innerHTML.toLowerCase().search(text[k])>-1){
+								oBody.rows[i].className = oBody.rows[i].className.replace(notSearchedClass,searchedClass);
+							}
+						}
+					}
+				}
+			}
+
+			//打乱顺序之后，重新整理表格样式
+			function afterDelete(sIndex){
+				var len = oBody.rows.length;
+				for(var i=sIndex;i<len;i++){
+					var oTr = oBody.rows[i];
+					oTr.cells[0].innerHTML = i+1;
+					oTr.className = (oTr.className==undefined)?(""):oTr.className;
+					oTr.className = oTr.className.replace(evenClass,"").trim();
+					if(!(i%2)){
+						oTr.className += " "+evenClass;
+					}
+				}
+			}
+
+			function deleteTr(o){
+				var oTd = o.parentNode.parentNode;
+				var ID = Number(oTd.cells[0].innerHTML);
+				oTd.parentNode.removeChild(oTd);
+				afterDelete(ID-1);
+			}
+
+			(function setInit(){
+				var len = oBody.rows.length;
+				for(var i=0;i<len;i++){
+					oDelete[i].onclick = function(){
+						deleteTr(this);
+					};
+				}
+			})();
+
+		}
+
+	</script>
+</head>
+<body>
+	姓名：<input type="text" id="name">
+	年龄：<input type="text" id="age">
+	<button id="btn">添加</button>
+	<input type="text" id="searchText">
+	<button id="search">搜索</button>
+	<button id="sort">升序排序</button>
+	<table id="tab1" border="1" width="500">
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>姓名</th>
+				<th>年龄</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr class="bgColor">
+				<td>1</td>
+				<td>Blue</td>
+				<td>27</td>
+				<td><a href='javascript:;' class='delete'>删除</a></td>
+			</tr>
+			<tr>
+				<td>2</td>
+				<td>张三</td>
+				<td>21</td>
+				<td><a href='javascript:;' class='delete'>删除</a></td>
+			</tr>
+			<tr class="bgColor">
+				<td>3</td>
+				<td>李四</td>
+				<td>25</td>
+				<td><a href='javascript:;' class='delete'>删除</a></td>
+			</tr>
+			<tr>
+				<td>4</td>
+				<td>王五</td>
+				<td>28</td>
+				<td><a href='javascript:;' class='delete'>删除</a></td>
+			</tr>
+		</tbody>
+	</table>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>tap选项卡</title>
+	<style>
+		
+		*{
+			padding:0;
+			margin:0;
+		}
+		button.active{
+			background-color:yellow;
+		}
+		#content div{
+			display:none;
+			width:200px;
+			height:200px;
+			color:blue;
+			background-color:#ccc;
+			font-size:50px;
+		}
+		#content .active{
+			display:block;
+		}
+
+	</style>
+	<script>
+		
+		window.onload = function(){
+			var btns = document.getElementById("btn"),
+				btn = btns.getElementsByTagName("button"),
+				content = document.getElementById("content"),
+				box = content.getElementsByTagName("div");
+
+			var btnLen = btn.length;
+
+			for(var i=0;i<btnLen;i++){
+				btn[i].onclick = (function(i){
+					return function(){
+						var className = (this.className==undefined)?(""):(this.className);
+						if(className.indexOf("active")==-1){
+							var activeBtn = btns.getElementsByClassName("active")[0];
+							activeBtn.className = activeBtn.className.replace(/active/,"");
+							var activeBox = content.getElementsByClassName("active")[0];
+							activeBox.className = activeBox.className.replace(/active/,"");
+
+							this.className = className+" active";
+							box[i].className += " active";
+						}
+					}
+				})(i);
+			}
+		}
+
+	</script>
+</head>
+<body>
+	<div id="btn">
+		<button class="active">按钮1</button>
+		<button>按钮2</button>
+		<button>按钮3</button>
+		<button>按钮4</button>
+	</div>
+	<div id="content">
+		<div class="active">内容1</div>
+		<div>内容2</div>
+		<div>内容3</div>
+		<div>内容4</div>
+	</div>
+</body>
+</html>

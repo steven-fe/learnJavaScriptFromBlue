@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>ajax请求框架（GET和POST）</title>
+	<script>
+		
+		window.onload = function(){
+			var oBtn = document.getElementsByTagName("button")[0];
+			oBtn.onclick = function(){
+
+				var param = {
+					url:"a.txt",
+					method:"POST",
+					data:"fname=Bill&lname=Gates",
+					fnSuccess:fnSuccess,
+					fnFail:fnFail
+				};
+
+				ajaxMenthod(param);
+
+				function fnSuccess(o){
+					for(var p in o){
+						console.log(p+":"+o[p]);
+					}
+				}
+
+				function fnFail(str){
+					alert("失败"+str);
+				}
+
+			};
+		};
+
+		function ajaxMenthod(param){
+
+			var url = param.url;
+			var method = param.method;
+			var data = param.data;
+			var fnSuccess = param.fnSuccess;
+			var fnFail = param.fnFail;
+
+			var oAjax;
+			if(window.XMLHttpRequest){
+				oAjax = new XMLHttpRequest();
+			}else{
+				oAjax = new ActiveXObject(Microsoft.XMLHTTP);
+			}
+
+
+			oAjax.open(method,url,true);
+			if(method=="GET"){
+				oAjax.send();
+			}else{
+				oAjax.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+				oAjax.send(data);
+			}
+
+			oAjax.onreadystatechange = function(){
+				if(oAjax.readyState==4){
+					if(oAjax.status==200){
+						//在eval内部加入一对字符括号的目的是：
+						//加上圆括号的目的是迫使eval函数在处理JavaScript代码的时候强制将括号内的表达式（expression）转化为对象，而不是作为语句（statement）来执行。举一个例子，例如对象字面量{}，如若不加外层的括号，那么eval会将大括号识别为JavaScript代码块的开始和结束标记，那么{}将会被认为是执行了一句空语句。
+						var o = (window.JSON==undefined)?(eval("("+oAjax.responseText+")")):(JSON.parse(oAjax.responseText));
+						fnSuccess(o);
+					}else{
+						if(fnFail){
+							fnFail(oAjax.status);
+						}
+					}
+				}
+			};
+		}
+
+	</script>
+</head>
+<body>
+	<button>按钮</button>
+</body>
+</html>

@@ -1,0 +1,186 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>智能时钟</title>
+    <style>
+        
+        *{
+            padding:0;
+            margin:0;
+        }
+        html,body{
+            width:100%;
+            height:100%;
+            color:#fff;
+            background-color:#030133;
+        }
+        #clock{
+            text-align:center;
+        }
+        h1{
+            padding:50px 0;
+        }
+        #time p{
+            padding:0 0 40px;
+        }
+        .num,.colon{
+            position:relative;
+            top:0;
+            width:25px;
+            height:37px;
+        }
+        #weekday{
+            width:38px;
+            height:36px;
+        }
+        #year4,#month2,#day2{
+            width:38px;
+            height:40px;
+        }
+        #week{
+            width:78px;
+            height:38px;
+        }
+
+
+    </style>
+    <script>
+
+        var preUrl = "images/";
+        var timeDate = [];
+        
+        window.onload = function(){
+
+            function getClock(){
+                var result = [];
+
+                var t = new Date();
+
+                var year = String(t.getFullYear());
+                var month = String(addZero(t.getMonth()+1));//月数以0开头，需要加一
+                var day = String(addZero(t.getDate()));
+                var hour = String(addZero(t.getHours()));
+                var minute = String(addZero(t.getMinutes()));
+                var second = String(addZero(t.getSeconds()));
+                var weekday = String(t.getDay());
+
+                result = result.concat(year.split(""));
+                result = result.concat(month.split(""));
+                result = result.concat(day.split(""));
+                result = result.concat(hour.split(""));
+                result = result.concat(minute.split(""));
+                result = result.concat(second.split(""));
+                result = result.concat(weekday.split(""));
+
+                return result;
+            }
+
+            //设置时间
+            function setClock(time){
+
+                //year
+                if(timeDate.slice(0,4).join()!==time.slice(0,4).join()){
+                    setNum("year",0,4,time);
+                }
+
+                //month
+                if(timeDate.slice(4,6).join()!==time.slice(4,6).join()){
+                    setNum("month",4,2,time);
+                }
+
+                //day
+                if(timeDate.slice(6,8).join()!==time.slice(6,8).join()){
+                    setNum("day",6,2,time);
+                }
+
+                //hour
+                if(timeDate.slice(8,10).join()!==time.slice(8,10).join()){
+                    setNum("hour",8,2,time);
+                }
+
+                //minute
+                if(timeDate.slice(10,12).join()!==time.slice(10,12).join()){
+                    setNum("minute",10,2,time);
+                }
+
+                //second
+                if(timeDate.slice(12,14).join()!==time.slice(12,14).join()){
+                    setNum("second",12,2,time);
+                }
+
+                //week
+                if(timeDate.slice(14,15).join()!==time.slice(14,15).join()){
+                    var weekday = document.getElementById("weekday");
+                    setImgSrc(weekday,"week"+((time[time.length-1]==0)?(7):(time[time.length-1])));
+                }
+
+                timeDate = time;//更新数据
+
+            }
+
+            function addZero(num){
+                //return (String(num).length==1)?("0"+num):num;
+                return num<10?("0"+num):(num);
+            }
+
+            function getStyle(o,name){
+                if(o.currentStyle){
+                    return o.currentStyle[name];
+                }else{
+                    return getComputedStyle(o,false)[name];
+                }
+            }
+
+            function setImgSrc(o,fileName){
+                o.src = preUrl+fileName+".png";
+            }
+
+            function setNum(name,sIndex,len,time){
+                for(var i=0;i<len;i++){
+                    var o = document.getElementById(name+i);
+                    var fileName = time[sIndex+i];
+                    setImgSrc(o,fileName);
+                }
+            }
+
+            setClock(getClock());
+            setInterval(function(){setClock(getClock())},1000);
+
+        }
+
+    </script>
+</head>
+<body>
+    <div id="clock">
+        <h1>超酷时钟</h1>
+        <div id="time">
+            <p>
+                <img src="images/1.png" id="year0" class="num">
+                <img src="images/9.png" id="year1" class="num">
+                <img src="images/7.png" id="year2" class="num">
+                <img src="images/0.png" id="year3" class="num">
+                <img src="images/year.png" id="year4">
+                <img src="images/0.png" id="month0" class="num">
+                <img src="images/1.png" id="month1" class="num">
+                <img src="images/month.png" id="month2">
+                <img src="images/0.png" id="day0" class="num">
+                <img src="images/1.png" id="day1" class="num">
+                <img src="images/week7.png" id="day2">
+            </p>
+            <p>
+                <img src="images/0.png" id="hour0" class="num">
+                <img src="images/0.png" id="hour1" class="num">
+                <img src="images/sign.png" class="colon">
+                <img src="images/0.png" id="minute0" class="num">
+                <img src="images/0.png" id="minute1" class="num">
+                <img src="images/sign.png" class="colon">
+                <img src="images/0.png" id="second0" class="num">
+                <img src="images/0.png" id="second1" class="num">
+                <img src="images/week.png" id="week">
+                <img src="images/week4.png" id="weekday">
+            </p>
+        </div>
+    </div>
+</body>
+</html>

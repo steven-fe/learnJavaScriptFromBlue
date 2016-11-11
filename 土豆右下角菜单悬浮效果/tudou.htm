@@ -1,0 +1,207 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>土豆右下角菜单悬浮效果</title>
+	<style>
+		
+		*{
+			padding:0;
+			margin:0;
+			list-style:none;
+			color:#fff;
+			font: 12px/1.25 tahoma,arial,宋体,sans-serif;
+		}
+		body{
+			background-color:#000;
+		}
+		#box{
+			position:fixed;
+			right:0;
+			bottom:0;
+			width:200px;
+		}
+		#main{
+			display:none;
+			position:relative;
+			top:315px;
+			background:url(mini_jpgs.jpg) no-repeat 0 0;
+			z-index:2;
+		}
+		#close{
+			position:absolute;
+			top:15px;
+			right:10px;
+			width:9px;
+			height:9px;
+			background:url(minibar.png) no-repeat 0 -76px;
+		}
+		#content{
+			height:315px;
+		}
+		#sideBar{
+			position:absolute;
+			top:27px;
+			left:0;
+			width:34px;
+			height:139px;
+			background:url(minibar.png) no-repeat 0 -280px;
+		}
+		#content a{
+			display:block;
+			width:34px;
+			height:27px;
+			line-height:25px;
+			color:#fff;
+			text-align:center;
+			text-decoration:none;
+		}
+		a#now{
+			color:#FF9900;
+		}
+		#content a:hover{
+			color:yellow;
+		}
+		#show{
+			padding:0 10px 0 45px;
+		}
+		#bottomBar{
+			position:relative;
+			left:165px;
+			width:204px;
+			height:50px;
+			margin:-2px 0 0 -2px;
+			background:url(minibar.png) no-repeat 0 0;
+			z-index:3;
+		}
+		#bottomBar ul{
+			overflow:hidden;
+			padding:0 0 0 44px;
+		}
+		#bottomBar li{
+			float:left;
+		}
+		#bottomBar a{
+			display:block;
+			width:24px;
+			height:22px;
+			margin:5px 0 0;
+		}
+		#bottomBar .bottomIcon1:hover{
+			background:url(minibar.png) no-repeat -1px -51px;
+		}
+		#bottomBar .bottomIcon2:hover{
+			background:url(minibar.png) no-repeat -25px -51px;
+		}
+		#bottomBar .bottomIcon3:hover{
+			background:url(minibar.png) no-repeat -49px -51px;
+		}
+		#bottomBar .bottomIcon4:hover{
+			background:url(minibar.png) no-repeat -73px -51px;
+		}
+		#bottomBar .bottomIcon5:hover{
+			background:url(minibar.png) no-repeat -97px -51px;
+		}
+		#bottomBar p{
+			padding:0 0 0 7px;
+		}
+		#startBtn{
+			position:absolute;
+			right:0;
+			bottom:-1px;
+			width:32px;
+			height:50px;
+			background:url(minibar.png) no-repeat -237px 0;
+			z-index:4;
+		}
+		#startBtn:hover{
+			position:absolute;
+			right:0;
+			bottom:-1px;
+			width:32px;
+			height:50px;
+			background-position:-270px 0;
+		}
+
+	</style>
+	<script src="move.js"></script>
+	<script>
+		
+		window.onload = function(){
+			var open = 0;
+			var oClose = document.getElementById("close");
+			var oStart = document.getElementById("startBtn");
+			var oMain = document.getElementById("main");
+			var oBottomBar = document.getElementById("bottomBar");
+			var nLeft = parseInt(getStyle(oBottomBar,"left"));
+			var nTop = parseInt(getStyle(oMain,"top"));
+
+			oStart.onclick = function(){
+				if(open==1){
+					return false;
+				}
+				open = 1;
+				move(oBottomBar,"left",0,6,function(){
+					oMain.style.display = "block";
+					move(oMain,"top",0,6);
+				});
+			};
+
+			oClose.onclick = function(){
+				move(oMain,"top",nTop,6,function(){
+					oMain.style.display = "none";
+					move(oBottomBar,"left",nLeft,6,function(){
+						open = 0;
+					});
+				});
+			};
+
+		};
+
+	</script>
+</head>
+<body>
+	<div id="box">
+		<div id="main">
+			<a href="javascript:;" id="close"></a>
+			<div id="content">
+				<a href="javascript:;" id="now">天气</a>
+				<ul id="sideBar">
+					<li><a href="javascript:;">星座</a></li>
+					<li><a href="javascript:;">排行</a></li>
+					<li><a href="javascript:;">热点</a></li>
+					<li><a href="javascript:;">直播</a></li>
+				</ul>
+				<div id="show">
+					<span id="city">北京</span>
+					<ul>
+						<li>
+							<p id="date_today">今天（周二）<img src="01.gif" alt=""></p>
+							<p>-1~10C° 晴 微风小于3级</p>
+						</li>
+						<li>
+							<p id="date_tomorrow">明天（周三）<img src="02.gif" alt=""></p>
+							<p>0~11C° 多云 北风3-4级</p>
+						</li>
+						<li>
+							<p id="date_nextTomorrow">后天（周四）<img src="01.gif" alt=""></p>
+							<p>-1~12C° 晴 北风3-4级 转 微风小于3级</p>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div id="bottomBar">
+			<ul>
+				<li><a href="javascript:;" class="bottomIcon1"></a></li>
+				<li><a href="javascript:;" class="bottomIcon2"></a></li>
+				<li><a href="javascript:;" class="bottomIcon3"></a></li>
+				<li><a href="javascript:;" class="bottomIcon4"></a></li>
+				<li><a href="javascript:;" class="bottomIcon5"></a></li>
+			</ul>
+			<p>智能课堂</p>
+		</div>
+		<a href="javascript:;" id="startBtn"></a>
+	</div>
+</body>
+</html>

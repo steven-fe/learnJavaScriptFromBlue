@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>ctrl+enter</title>
+	<script>
+		
+		window.onload = function(){
+			var oTxt = document.getElementById("txt");
+			var oShow = document.getElementById("show");
+
+			oTxt.onkeydown = function(event){
+				var e = event||window.event;
+				if(e.keyCode==13&&e.ctrlKey==1){
+					oShow.innerHTML += oTxt.value+"\n";
+					oTxt.value = "";
+				}
+			};
+
+		};
+
+	</script>
+</head>
+<body>
+	<input type="text" id="txt">
+	<textarea cols="30" rows="10" id="show"></textarea>
+</body>
+</html>

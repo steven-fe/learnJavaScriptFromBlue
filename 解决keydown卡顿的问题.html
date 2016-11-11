@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>解决keydown卡顿的问题</title>
+	<style>
+		
+		*{
+			padding:0;
+			margin:0;
+		}
+		div{
+			position:absolute;
+			top:0;
+			left:0;
+			width:200px;
+			height:200px;
+			background-color:red;
+		}
+
+	</style>
+	<script>
+
+
+		
+		window.onload = function(){
+			dir = {left:0,top:0,right:0,bottom:0};
+			var oDiv = document.getElementsByTagName("div")[0];
+
+			setInterval(function(){
+				if(dir.left){
+					oDiv.style.left = oDiv.offsetLeft-1+"px";
+				}
+				if(dir.top){
+					oDiv.style.top = oDiv.offsetTop-1+"px";
+				}
+				if(dir.right){
+					oDiv.style.left = oDiv.offsetLeft+1+"px";
+				}
+				if(dir.bottom){
+					oDiv.style.top = oDiv.offsetTop+1+"px";
+				}
+			},1);
+
+			document.onkeydown = function(event){
+				var e = event||window.event;
+				setSate(e,1);
+			}
+
+			document.onkeyup = function(event){
+				var e = event||window.event;
+				setSate(e,0);
+			}
+
+			function setSate(e,keydown){
+				switch(e.keyCode){
+					case 37:(keydown)?(dir.left=1):(dir.left=0);break;
+					case 38:(keydown)?(dir.top=1):(dir.top=0);break;
+					case 39:(keydown)?(dir.right=1):(dir.right=0);break;
+					case 40:(keydown)?(dir.bottom=1):(dir.bottom=0);break;
+				}
+			}
+		
+		};
+
+	</script>
+</head>
+<body>
+	<div></div>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>getElementByClassName方法（普通和递归）</title>
+	<script>
+		
+		//通用方法
+		function getByClass(oParent,className){
+			var oResult = [];
+
+			var oChild = oParent.getElementsByTagName("*");
+			var len = oChild.length;
+			for(var i=0;i<len;i++){
+				if(oChild[i].className == className){
+					oResult.push(oChild[i]);
+				}
+			}
+
+			return oResult;
+		}
+
+		//递归的方法
+		function getByClass(oParent,className){
+			if(className==""){
+				return [];
+			}
+			var result = [];
+
+			var oClassName = oParent.className==undefined?(""):oParent.className;
+			if(oClassName.search(className)>-1){
+				result.push(oParent);
+			}
+
+			var child = oParent.children;
+			var len = child.length;
+			for(var i=0;i<len;i++){
+				result = result.concat(getByClass(child[i],className));
+			}
+
+			return result;
+
+		}
+
+
+		window.onload = function(){
+			var oUl = document.getElementsByTagName("ul")[0];
+			console.log(getByClass(oUl,"l1"));
+		}
+
+	</script>
+</head>
+<body>
+	<ul>
+		<li class="l1"></li>
+		<li></li>
+		<li class="l1"></li>
+		<li></li>
+	</ul>
+</body>
+</html>

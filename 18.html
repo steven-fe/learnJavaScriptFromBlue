@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>自定义滚动条</title>
+    <style>
+        
+        *{
+            padding:0;
+            margin:0;
+        }
+        body.disableSelect{
+            -moz-user-select: none; /*火狐*/
+            -webkit-user-select: none; /*webkit浏览器*/
+            -ms-user-select: none; /*IE10*/
+            -khtml-user-select: none; /*早期浏览器*/
+            user-select: none;
+        }
+        #box{
+            position:relative;
+            top:50px;
+            left:50px;
+            width:424px;
+        }
+        #scrollBar{
+            position:absolute;
+            top:0;
+            right:-20px;
+            width:20px;
+            height:100%;
+            background-color:#ccc;
+        }
+        #slider{
+            position:absolute;
+            width:100%;
+            height:20px;
+            background-color:red;
+        }
+        #content{
+            width:400px;
+            padding:10px;
+            border:2px solid #000;
+        }
+        #innerContent{
+            position:relative;
+            height:300px;
+            overflow:hidden;
+        } 
+        #content p{
+            position:absolute;
+            top:0;
+            left:0;
+        }
+
+    </style>
+    <script>
+        
+        window.onload = function(){
+            var oContent = document.getElementById("content");
+            var oText = oContent.getElementsByTagName("p")[0];
+            var oBar = document.getElementById("scrollBar");
+            var oSlider = document.getElementById("slider");
+
+            var dragSlider = (function(){
+                var textHeight;
+                var sliderHeight = slider.offsetHeight;
+                var barHeight = oBar.offsetHeight;
+                var frameTop;
+                var sliderPosY;
+                var mouseSliderPosY;
+                var mouseDown = 0;
+                var textPercent = 0;
+                return function(o,oText){
+                    o.onmousedown =function(event){
+                        var e = event||window.event;
+                        var positionY = getPos(e).y;
+                        textHeight = oText.offsetHeight;
+                        frameTop = getAbsoluteY(o.parentNode);
+                        mouseSliderPosY = positionY-frameTop-o.offsetTop;
+
+                        mouseDown = 1;
+                    }
+
+
+
+                    document.onmousemove = function(event){
+                        if(mouseDown){
+                            var e = event||window.event;
+                            var positionY = getPos(e).y;
+                            sliderPosY = positionY-frameTop-mouseSliderPosY;
+                            if(sliderPosY<=0){
+                                sliderPosY = 0;
+                            }else if(sliderPosY>=barHeight-sliderHeight){
+                                sliderPosY = barHeight-sliderHeight;
+                            }
+                            o.style.top = sliderPosY+"px";
+                            textPercent = sliderPosY/(barHeight-sliderHeight);
+                            textPosY = Math.round(textPercent*(textHeight-oText.parentNode.offsetHeight));
+                            oText.style.top = -textPosY+"px";
+
+                        }
+                    }
+
+                    document.onmouseup = function(){
+                        if(mouseDown){
+                            mouseDown = 0;
+                        }
+                    }
+                };
+            })();
+
+            dragSlider(oSlider,oText);
+
+        };
+
+        function getAbsoluteY(o){
+            var y = o.offsetTop;
+            if(o.offsetParent!=null){
+                return y+getAbsoluteY(o.offsetParent);
+            }else{
+                return 0;
+            }
+        }
+
+        function getPos(e){
+            var scrollTop = document.documentElement.scrollTop||document.body.scrollTop;
+            var scrollLeft = document.documentElement.scrollLeft||document.body.scrollLeft;
+            return {x:scrollLeft+e.clientX,y:scrollTop+e.clientY}
+        }
+
+    </script>
+</head>
+<body>
+    <div id="box">
+        <div id="scrollBar">
+            <a href="javascript:;" id="slider"></a>
+        </div>
+        <div id="content">
+            <div id="innerContent">
+            <p>
+            每个人付出了都希望得到一个满意的回到。然而，这回报往往是与自身的付出成正比的，而没有坚持不懈的努力，就不会得到惊人的回报。但这个坚持，这个努力必须找准方向，因为决定一件事情的成败的因素有许多，如此朝着错误的方向，同样得不到应有的回报。那么在我们建站运营之时也是如此，应该把握好建站的成败因素，从而成功运营发展一个网站。下面就是笔者结合自身建站经验谈谈四点影响新站运营的四个因素。
+　　第一：空间稳定，域名易记。
+　　一个网站的空间，必须是稳定且良好的。如果没有一个稳定的空间，会给网站的运营发展带来极大的影响。便宜有便宜的原因，贵也有贵的道理，而低价格背后往往隐藏“陷阱”。所以一个网站要真想做长期的运营发展，那么在这方面绝不能因为省，而去寻找免费或者低价空间。无论做什么事情，没有付出哪来的回报。而有了一个稳定的空间，还需要一个要好的域名。而简单易记、寓意深刻的域名可以让你的网站逐渐走到对手的前面。反之，对网站的运营发展有所减慢。因而，稳定的空间以及易记的域名是可以为网站奠定一个良好的基础，也是网站建设的第一步。
+　　第二：坚持每天编写软文，更新原创文章
+　　对于伪原创，现在有很多介绍伪原创技巧的文章，当然也有许多伪原创软件，这软件我们就不多说了，语句不通顺等毛病一堆，根本称不上什么文章。而采取伪原创技巧撰写文章也必然会带上很强的功利色彩，而对于刚刚投入运营的网站却很难产生预期的效果，伪原创的收录会远远小于原创的收录。因为新建的站点必须要满足用户的需求，哪怕是一个很细节的问题。对于网站运营初期客户群体是很小的，因而有足够的时间去撰写原创软文，实实在在的更新原创文章，解决用户需求。
+　　第三：内链外链建设
+　　对于网站内链，主要就是做好页面与页面之间链接，相对而已内链建设要简单的多，但也是需要定期的对内链进行检查是否是有死链接。除此之外，在更新文章时文章内容里的页面内部链接数量应控制在三个以内，因为链接越多权重越分散。
+　　而至于外链最常见的方法就是做友情链接，现在有许多站长都会选择购买链接，虽然如此链接来的快，但笔者并不提倡，如果时间充足的话，笔者还是建议多做做友链交换的工作。此外便是规律的对论坛、博客等进行外链。同时还应该学会分析竞争对手都做了哪些外链，哪里做的外链，继而通过学习参考超越竞争对手。最后还有软文写作的投稿，也可以带来很多外链，并且都是优质的长期的，而且文章内容本身对网站也有很好的宣传作用。
+　　第四：坚持推广，执行到底
+　　无论我们做任何事情，都一定要坚持到底，半途而废的做法永远造就不了成功的。很多人就是因为没能坚持到最后，而留下遗憾。对于我们来说，不容易做的事情，对别人来说同样也不容易，而我坚持不下来，别人也可能坚持不下来。但我要是坚持下来了，慢慢的我就会比别人更强大。做推广同样如此，需要一个漫长的过程，并且这过程还是很枯燥的，有些人就在这个地方绊倒了，就放弃了。而有些人却就坚持下来，那么成功便会慢慢向他靠近。只要我们坚持能坚持到底，那么成功也将触手可及。
+            </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

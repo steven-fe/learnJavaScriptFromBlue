@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>老鹰抓小鸡（画笔）</title>
+	<style>
+		
+		*{
+			padding:0;
+			margin:0;
+		}
+		div{
+			position:absolute;
+			top:0;
+			left:0;
+			width:10px;
+			height:10px;
+			background-color:red;
+		}
+
+	</style>
+	<script>
+		
+		function getPos(e){
+			var scrollTop = document.documentElement.scrollTop||document.body.scrollTop;
+			var scrollLeft = document.documentElement.scrollLeft||document.body.scrollLeft;
+			return {x:scrollLeft+e.clientX,y:scrollTop+e.clientY}
+		}
+		window.onload = function(){
+
+			var arr = [];
+			var num = [];
+			var len = 200;
+
+			for(var i=0;i<len;i++){
+				var oDiv = document.createElement("div");
+				document.body.appendChild(oDiv);
+				arr.push(oDiv);
+				num[i] = [0,0];
+			}
+
+			document.onmousemove = function(event){
+				var e = event||window.event;
+				var pos = getPos(e);
+				arr[0].style.left = pos.x+"px";
+				arr[0].style.top = pos.y+"px";
+				num[0] = [pos.x,pos.y];
+				for(var i=len-1;i>0;i--){
+					num[i] = num[i-1];
+					arr[i].style.left = num[i-1][0]+"px";
+					arr[i].style.top = num[i-1][1]+"px";
+				}
+			};
+
+			//通过设置num数组的形式，存储数据，降低因为查询元素offsetLeft和offsetRight带来的性能负担。
+			//通过倒序的for循环，使得后一个元素的位置和前一个元素位置相同，前一个元素位置和第一个元素位置相同（也就是鼠标的位置）。
+
+
+		};
+
+	</script>
+</head>
+<body>
+	
+</body>
+</html>

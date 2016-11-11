@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>拖拽指定区域（面向过程方法）</title>
+	<style>
+		
+		*{
+			padding:0;
+			margin:0;
+		}
+		body.disableSelect{
+            -moz-user-select: none; /*火狐*/
+            -webkit-user-select: none; /*webkit浏览器*/
+            -ms-user-select: none; /*IE10*/
+            -khtml-user-select: none; /*早期浏览器*/
+            user-select: none;
+        }
+		#bigBox{
+			position:relative;
+			top:50px;
+			left:50px;
+			width:500px;
+			height:500px;
+			background-color:#ccc;
+		}
+		.vBox{
+			position:absolute;
+			top:100px;
+			left:100px;
+			display:none;
+			border:2px solid #000;
+			background-color:#fff;
+			opacity:0.3;
+			filter:alpha(opacity=30);
+			z-index:9;
+		}
+		#box{
+			position:absolute;
+			top:100px;
+			left:100px;
+			width:100px;
+			height:100px;
+			border:2px solid #000;
+			z-index:10;
+		}
+		#box #title{
+			height:40px;
+			background-color:red;
+			cursor:pointer;
+		}
+
+	</style>
+	<script>
+		
+		window.onload = function(){
+
+			var oBigBox = document.getElementById("bigBox");
+			var oBox = document.getElementById("box");
+			var oTitle = document.getElementById("title");
+
+			var drag = (function(){
+				var visionWidth = document.documentElement.clientWidth;
+				var visionHeight = document.documentElement.clientHeight;
+				var mouseDown = 0;
+				var boxPos = [0,0];
+				var mouseBoxPos = [0,0];
+				var boxSize = [0,0];
+				var isWindow = 1;
+				return function(param){
+
+					var o = param.o;
+					var frame = (param.frame==undefined)?(document.body):(param.frame);
+					var sorptionValue = (param.sorptionValue==undefined)?(0):(param.sorptionValue);
+					var virtualBorder = (param.virtualBorder==undefined)?(false):(param.virtualBorder);
+					var vBox;
+
+					(frame==window)?(isWindow==1):(isWindow==0);
+					setSelect(1);//设置默认的可以选择文字的模式
+
+					o.onmousedown = function(event){
+						var e = event||window.event;
+						var position = getPos(e);
+						boxPos = [o.offsetLeft,o.offsetTop];
+						if(frame==document.body){
+							mouseBoxPos = [(position.x-boxPos[0]),(position.y-boxPos[1])];
+						}else{
+							mouseBoxPos = [(position.x-boxPos[0]-frame.offsetLeft),(position.y-boxPos[1]-frame.offsetTop)];
+						}
+						boxSize = [o.offsetWidth,o.offsetHeight];
+
+						document.onmousemove = moveEvent;
+						document.onmouseup = upEvent;
+
+						mouseDown = 1;
+						setSelect(0);
+						if(virtualBorder){setVirtualBorder(false);}
+					};
+
+					function moveEvent(event){
+						if(mouseDown){
+							var e = event||window.event;
+							var pos = getPos(e);
+							boxPos[0] = boundary(pos)[0];
+							boxPos[1] = boundary(pos)[1];
+							if(virtualBorder){
+								vBox.style.left = boxPos[0]+"px";
+								vBox.style.top = boxPos[1]+"px";
+							}
+						}
+					}
+
+					function upEvent(event){
+						if(mouseDown){
+							if(virtualBorder){
+								o.style.left = boxPos[0]+"px";
+								o.style.top = boxPos[1]+"px";
+								setVirtualBorder(true);
+							}
+							setSelect(true);
+							mouseDown = 0;
+							document.onmousemove = null;
+							document.onmouseup = null;
+						}
+					}
+
+					//设置是否可以选择文字
+					function setSelect(able){
+						if(able){
+							document.body.className = document.body.className.replace("disableSelect","");
+						}else{
+							document.body.className += " disableSelect";
+						}
+					}
+
+					//设置虚拟框
+					var setVirtualBorder = (function(){
+						vBox = document.createElement("div");
+						o.parentNode.insertBefore(vBox,o);
+						vBox.className = "vBox";
+						return function(dele){
+							if(!dele){
+								vBox.style.display = "block";
+								vBox.style.width = boxSize[0]-4+"px";
+								vBox.style.height = boxSize[1]-4+"px";
+							}else{
+								vBox.style.display = "none";
+							}
+						}
+					})();
+
+					//吸附功能
+					function boundary(position){
+
+						var scrollLeft = document.documentElement.scrollLeft||document.body.scrollLeft;
+						var scrollTop = document.documentElement.scrollTop||document.body.scrollTop;
+						var result;
+						
+						if(frame==document.body){
+							result = [position.x-mouseBoxPos[0],position.y-mouseBoxPos[1]];
+							if(position.y-mouseBoxPos[1]-scrollTop<=sorptionValue){
+								result[1] = scrollTop;
+							}
+							if(position.x-mouseBoxPos[0]-scrollLeft<=sorptionValue){
+								result[0] = scrollLeft;
+							}
+							if(position.y-mouseBoxPos[1]+boxSize[1]+sorptionValue>=visionHeight+scrollTop){
+								result[1] = visionHeight+scrollTop-boxSize[1];
+							}
+							if(position.x-mouseBoxPos[0]+boxSize[0]+sorptionValue>=visionWidth+scrollLeft){
+								result[0] = visionWidth+scrollLeft-boxSize[0];
+							}
+						}else{
+							result = [position.x-mouseBoxPos[0]-frame.offsetLeft,position.y-mouseBoxPos[1]-frame.offsetTop];
+							if(position.y-mouseBoxPos[1]-frame.offsetTop<=sorptionValue){
+								result[1] = 0;
+							}
+							if(position.x-mouseBoxPos[0]-frame.offsetLeft<=sorptionValue){
+								result[0] = 0;
+							}
+							if(position.y-mouseBoxPos[1]-frame.offsetTop+boxSize[1]+sorptionValue>=frame.offsetHeight){
+								result[1] = frame.offsetHeight-boxSize[1];
+							}
+							if(position.x-mouseBoxPos[0]-frame.offsetLeft+boxSize[0]+sorptionValue>=frame.offsetWidth){
+								result[0] = frame.offsetWidth-boxSize[0];
+							}
+						}
+
+						return result;
+					}
+
+					function getPos(e){
+						var scrollTop = document.documentElement.scrollTop||document.body.scrollTop;
+						var scrollLeft = document.documentElement.scrollLeft||document.body.scrollLeft;
+						return {x:scrollLeft+e.clientX,y:scrollTop+e.clientY}
+					}
+
+				}
+			})();
+
+			var setParam = {
+				o:oBox,
+				frame:oBigBox,
+				sorptionValue:30,
+				virtualBorder:true
+			};
+
+			drag(setParam);
+
+		};
+
+	</script>
+</head>
+<body class="disableSelect">
+	<div id="bigBox">
+		<p>儿科交换空间蔷薇科情况结合客户叫我去额 我去空间和科维奇和二科维奇和核武器额会计期望和空间完全为契机和空间完全和武器和</p>
+		<div id="box">
+			<div id="title"></div>
+			<div id="content">这是内容区域。</div>
+		</div>
+	</div>
+</body>
+</html>

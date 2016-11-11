@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>拖拽指定区域(面向对象方法)</title>
+	<style>
+		
+		*{
+			padding:0;
+			margin:0;
+		}
+		body.disableSelect{
+            -moz-user-select: none; /*火狐*/
+            -webkit-user-select: none; /*webkit浏览器*/
+            -ms-user-select: none; /*IE10*/
+            -khtml-user-select: none; /*早期浏览器*/
+            user-select: none;
+        }
+		#bigBox{
+			position:relative;
+			top:50px;
+			left:50px;
+			width:500px;
+			height:500px;
+			background-color:#ccc;
+		}
+		.vBox{
+			position:absolute;
+			top:100px;
+			left:100px;
+			display:none;
+			border:2px solid #000;
+			background-color:#fff;
+			opacity:0.3;
+			filter:alpha(opacity=30);
+			z-index:9;
+		}
+		#box{
+			position:absolute;
+			top:100px;
+			left:100px;
+			width:100px;
+			height:100px;
+			border:2px solid #000;
+			z-index:10;
+		}
+		#box #title{
+			height:40px;
+			background-color:red;
+			cursor:pointer;
+		}
+
+	</style>
+	<script>
+		
+		window.onload = function(){
+
+			//面向对象的写法，变量写成属性，函数写在prototype里面。
+
+			var oBigBox = document.getElementById("bigBox");
+			var oBox = document.getElementById("box");
+			var oTitle = document.getElementById("title");
+
+			var setParam = {
+				o:oTitle,
+				frame:oBigBox,
+				sorptionValue:0,
+				virtualBorder:1
+			};
+
+			new Drag(setParam);
+		};
+
+			function Drag(param){
+
+				this.vision = [document.documentElement.clientWidth,document.documentElement.clientHeight];
+				this.mouseDown = 0;
+				this.boxPos = [0,0];
+				this.mouseBoxPos = [0,0];
+				this.boxSize = [0,0];
+				this.o = param.o.parentNode;
+				this.frame = (param.frame==undefined)?(document.body):(param.frame);
+				this.sorptionValue = (param.sorptionValue==undefined)?(0):(param.sorptionValue);
+				this.virtualBorder = (param.virtualBorder==undefined)?(false):(param.virtualBorder);
+				this.vBox = null;
+
+				if(this.virtualBorder){
+					this.vBox = document.createElement("div");
+					this.o.parentNode.insertBefore(this.vBox,this.o);
+					this.vBox.className = "vBox";
+				}
+				
+				var _this = this;
+				param.o.onmousedown = function(){_this.downEvent()};
+
+			}
+
+			Drag.prototype.downEvent = function(event){
+				var e = event||window.event;
+				var position = this.getPos(e);
+				this.boxPos = [this.o.offsetLeft,this.o.offsetTop];
+				if(this.frame==document.body){
+					this.mouseBoxPos = [(position.x-this.boxPos[0]),(position.y-this.boxPos[1])];
+				}else{
+					this.mouseBoxPos = [(position.x-this.boxPos[0]-this.frame.offsetLeft),(position.y-this.boxPos[1]-this.frame.offsetTop)];
+				}
+				this.boxSize = [this.o.offsetWidth,this.o.offsetHeight];
+
+				var _this = this;
+				document.onmousemove = function(){_this.moveEvent()};
+				document.onmouseup = function(){_this.upEvent()};
+
+				this.mouseDown = 1;
+				this.setSelect(0);//禁止文字被选中
+				if(this.virtualBorder){this.setVirtualBorder(false);}
+			}
+			Drag.prototype.moveEvent = function(event){
+				if(this.mouseDown){
+					var e = event||window.event;
+					var pos = this.getPos(e);
+					this.boxPos[0] = this.boundary(pos)[0];
+					this.boxPos[1] = this.boundary(pos)[1];
+					if(this.virtualBorder){
+						this.vBox.style.left = this.boxPos[0]+"px";
+						this.vBox.style.top = this.boxPos[1]+"px";
+					}else{
+						this.o.style.left = this.boxPos[0]+"px";
+						this.o.style.top = this.boxPos[1]+"px";
+					}
+				}
+			};
+			Drag.prototype.upEvent = function(){
+				if(this.mouseDown){
+					if(this.virtualBorder){
+						this.o.style.left = this.boxPos[0]+"px";
+						this.o.style.top = this.boxPos[1]+"px";
+						this.setVirtualBorder(true);
+					}
+					this.setSelect(true);
+					this.mouseDown = 0;
+					document.onmousemove = null;
+					document.onmouseup = null;
+				}
+			}
+			//处理边界问题函数
+			Drag.prototype.boundary = function(position){
+
+				var scrollLeft = document.documentElement.scrollLeft||document.body.scrollLeft;
+				var scrollTop = document.documentElement.scrollTop||document.body.scrollTop;
+				var result;
+				
+				if(this.frame==document.body){
+					result = [position.x-this.mouseBoxPos[0],position.y-this.mouseBoxPos[1]];
+					if(position.y-this.mouseBoxPos[1]-scrollTop<=this.sorptionValue){
+						result[1] = scrollTop;
+					}
+					if(position.x-this.mouseBoxPos[0]-scrollLeft<=this.sorptionValue){
+						result[0] = scrollLeft;
+					}
+					if(position.y-this.mouseBoxPos[1]+this.boxSize[1]+this.sorptionValue>=this.vision[1]+scrollTop){
+						result[1] = this.vision[1]+scrollTop-this.boxSize[1];
+					}
+					if(position.x-this.mouseBoxPos[0]+this.boxSize[0]+this.sorptionValue>=this.vision[0]+scrollLeft){
+						result[0] = this.vision[0]+scrollLeft-this.boxSize[0];
+					}
+				}else{
+					result = [position.x-this.mouseBoxPos[0]-this.frame.offsetLeft,position.y-this.mouseBoxPos[1]-this.frame.offsetTop];
+					if(position.y-this.mouseBoxPos[1]-this.frame.offsetTop<=this.sorptionValue){
+						result[1] = 0;
+					}
+					if(position.x-this.mouseBoxPos[0]-this.frame.offsetLeft<=this.sorptionValue){
+						result[0] = 0;
+					}
+					if(position.y-this.mouseBoxPos[1]-this.frame.offsetTop+this.boxSize[1]+this.sorptionValue>=this.frame.offsetHeight){
+						result[1] = this.frame.offsetHeight-this.boxSize[1];
+					}
+					if(position.x-this.mouseBoxPos[0]-this.frame.offsetLeft+this.boxSize[0]+this.sorptionValue>=this.frame.offsetWidth){
+						result[0] = this.frame.offsetWidth-this.boxSize[0];
+					}
+				}
+
+				return result;
+			}
+			Drag.prototype.setVirtualBorder = function(dele){
+				if(!dele){
+					this.vBox.style.display = "block";
+					this.vBox.style.width = this.boxSize[0]-4+"px";
+					this.vBox.style.height = this.boxSize[1]-4+"px";
+				}else{
+					this.vBox.style.display = "none";
+				}
+			};
+			//设置禁止文字被选中
+			Drag.prototype.setSelect = function(able){
+				if(able){
+					document.body.className = document.body.className.replace("disableSelect","");
+				}else{
+					document.body.className += " disableSelect";
+				}
+			}
+			//获取鼠标绝对位置（鼠标位置+滚动条距离）
+			Drag.prototype.getPos = function(e){
+				var scrollTop = document.documentElement.scrollTop||document.body.scrollTop;
+				var scrollLeft = document.documentElement.scrollLeft||document.body.scrollLeft;
+				return {x:scrollLeft+e.clientX,y:scrollTop+e.clientY}
+			}
+
+	</script>
+</head>
+<body>
+	<div id="bigBox">
+		<p>儿科交换空间蔷薇科情况结合客户叫我去额 我去空间和科维奇和二科维奇和核武器额会计期望和空间完全为契机和空间完全和武器和</p>
+		<div id="box">
+			<div id="title"></div>
+			<div id="content">这是内容区域。</div>
+		</div>
+	</div>
+</body>
+</html>

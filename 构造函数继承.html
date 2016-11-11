@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>构造函数继承</title>
+	<style>
+		*{
+			padding:0;
+			margin:0;
+		}
+		body.disableSelect{
+            -moz-user-select: none; /*火狐*/
+            -webkit-user-select: none; /*webkit浏览器*/
+            -ms-user-select: none; /*IE10*/
+            -khtml-user-select: none; /*早期浏览器*/
+            user-select: none;
+        }
+		div{
+			position:absolute;
+			left:0;
+			top:0;
+			width:200px;
+			height:200px;
+			line-height:200px;
+			background-color:red;
+			color:#fff;
+			text-align:center;
+			cursor:pointer;
+		}
+	</style>
+	<script>
+
+		function Drag(o){
+			var _this = this;
+			this.oBtn = o;
+			this.disX = 0;
+			this.disY = 0;
+			this.oBtn.onmousedown = function(event){
+				_this.mouseDown(event);
+			}
+		}
+		Drag.prototype.mouseDown = function(event){
+			var _this = this;
+			var e = event||window.event;
+			this.disX = e.clientX-this.oBtn.offsetLeft;
+			this.disY = e.clientY-this.oBtn.offsetTop;
+			this.setSelect(0);
+			document.onmousemove = function(event){_this.mouseMove(event)};
+			document.onmouseup = function(){_this.mouseUp()};
+		 }
+		Drag.prototype.mouseMove = function(event){
+			var e = event||window.event;
+			this.oBtn.style.left = e.clientX-this.disX+"px";
+			this.oBtn.style.top = e.clientY-this.disY+"px";
+		}
+		Drag.prototype.mouseUp = function(){
+			this.setSelect(1);
+			document.onmousemove = null;
+			document.onmouseup = null;
+		}
+		Drag.prototype.setSelect = function(able){
+			if(able){
+				document.body.className = document.body.className.replace("disableSelect","");
+			}else{
+				document.body.className += " disableSelect";
+			}
+		}
+
+		function LimitDrag(o){
+			Drag.call(this,o);
+		}
+
+		for(var p in Drag.prototype){
+			LimitDrag.prototype[p] = Drag.prototype[p];
+		}
+		LimitDrag.prototype.mouseMove = function(event){
+			var e = event||window.event;
+			var l = e.clientX-this.disX;
+			var t = e.clientY-this.disY;
+
+			if(l<=0){
+				l=0;
+			}else if(l>=document.documentElement.clientWidth-this.oBtn.offsetWidth){
+				l=document.documentElement.clientWidth-this.oBtn.offsetWidth;
+			}
+			if(t<=0){
+				t=0;
+			}else if(t>=document.documentElement.clientHeight-this.oBtn.offsetHeight){
+				t=document.documentElement.clientHeight-this.oBtn.offsetHeight;
+			}
+
+			this.oBtn.style.left = l+"px";
+			this.oBtn.style.top = t+"px";
+		}
+
+		window.onload = function(){
+			var o = document.getElementsByTagName("div")[0];
+			var o1 = document.getElementsByTagName("div")[1];
+			new Drag(o);
+			new LimitDrag(o1);
+		};
+
+		
+
+	</script>
+</head>
+<body>
+	<div>普通的拖拽</div>
+	<div>限制的拖拽</div>
+</body>
+</html>

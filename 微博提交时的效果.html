@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>微博提交时的效果</title>
+	<style>
+		*{
+			padding:0;
+			margin:0;
+		}
+		#show{
+			width:300px;
+			height:400px;
+			border:5px solid #000;
+			margin:100px auto 0;
+			overflow:hidden;
+		}
+		#show li{
+			overflow:hidden;
+			width:100%;
+			border-bottom:1px dashed #000;
+			line-height:20px;
+			font-size:14px;
+			text-indent:2em;
+		}
+
+	</style>
+	<script src="move.js"></script>
+	<script>
+		
+		window.onload = function(){
+			var oTxt = document.getElementById("txt");
+			var oBtn = document.getElementsByTagName("button")[0];
+			var oShow = document.getElementById("show");
+			var oUl = oShow.getElementsByTagName("ul")[0];
+
+			oBtn.onclick = function(){
+				var str = oTxt.value;
+				var newLi = document.createElement("li");
+				newLi.innerHTML = str;
+				if(oUl.children.length==0){
+					oUl.appendChild(newLi);
+				}else{
+					oUl.insertBefore(newLi,oUl.firstChild);
+				}
+				var nHeight = newLi.offsetHeight-parseInt(getStyle(newLi,"border-bottom-width"));
+				newLi.style.height = 0;
+				newLi.style.opacity = 0;
+				newLi.style.filter = "alpha(opacity=0)";
+				move(newLi,"height",nHeight,6,function(){
+					move(newLi,"opacity",100,6);
+				});
+			};
+		};
+
+	</script>
+</head>
+<body>
+	<input type="text" id="txt">
+	<button>提交</button>
+	<div id="show">
+		<ul>
+		</ul>
+	</div>
+</body>
+</html>

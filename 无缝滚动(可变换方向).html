@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>无缝滚动(可变换方向)</title>
+	<style>
+		
+		*{
+			padding:0;
+			margin:0;
+		}
+		#box{
+			overflow:hidden;
+			position:relative;
+			width:280px;
+			height:70px;
+			border:10px solid #ccc;
+			margin:100px auto;
+		}
+		ul{
+			position:absolute;
+			top:0;
+			left:0;
+			width:280px;
+			list-style:none;
+			overflow:hidden;
+		}
+		li{
+			float:left;
+			width:50px;
+			height:50px;
+			margin:10px;
+		}
+		.img1{
+			background-color:red;
+		}
+		.img2{
+			background-color:green;
+		}
+		.img3{
+			background-color:blue;
+		}
+		.img4{
+			background-color:pink;
+		}
+
+	</style>
+	<script>
+		
+		window.onload = function(){
+			var timer  = null,
+				time = 10,
+				step = -1,
+				oBox = document.getElementById("box"),
+				oUl = oBox.getElementsByTagName("ul")[0],
+				oLi = oUl.getElementsByTagName("li"),
+				oTurnLeft = document.getElementById("turnLeft"),
+				oTurnRight = document.getElementById("turnRight");
+
+			//init	
+			oUl.innerHTML += oUl.innerHTML;
+			var oliWidth = oLi[0].offsetWidth+parseInt(getStyle(oLi[0],"marginLeft"))*2;
+			oUl.style.width = oLi.length*oliWidth+"px";
+
+			timer = setInterval(function(){
+				move(oUl,step);
+			},time);
+
+			//event
+			oUl.onmouseover = function(){
+				clearInterval(timer);
+			};
+			oUl.onmouseout = function(){
+				timer = setInterval(function(){
+					move(oUl,step);
+				},time);
+			};
+
+			oTurnLeft.onclick = function(){
+				step = (step<0)?(step):(-step);
+			};
+			oTurnRight.onclick = function(){
+				step = (step>0)?(step):(-step);
+			};
+
+			//fn
+			function move(o,steps){
+				if(steps<0&&o.offsetLeft<=-o.offsetWidth/2){
+					o.style.left = 0;
+				}else if(steps>0&&o.offsetLeft>=0){
+					o.style.left = -o.offsetWidth/2+"px";
+				}
+				o.style.left = o.offsetLeft+steps+"px";
+			}
+
+			function getStyle(o,name){
+				if(o.currentStyle){
+					return o.currentStyle[name];
+				}else{
+					return getComputedStyle(o,false)[name];
+				}
+			}
+		}
+
+	</script>
+</head>
+<body>
+	<a href="javascript:;" id="turnLeft">turn Left</a>
+	<div id="box">
+		
+		<ul>
+			<li class="img1"></li>
+			<li class="img2"></li>
+			<li class="img3"></li>
+			<li class="img4"></li>
+		</ul>
+	</div>
+	<a href="javascript:;" id="turnRight">turn Right</a>
+</body>
+</html>

@@ -1,0 +1,137 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>淘宝首页幻灯片(IE7下有bug)</title>
+	<style>
+		
+		*{
+			padding:0;
+			margin:0;
+			list-style:none;
+		}
+		#box{
+			overflow:hidden;
+			position:relative;
+			width:470px;
+			height:150px;
+			margin:100px auto 0;
+			background-color:red;
+		}
+		#img{
+			position:relative;
+			top:0px;
+			height:750px;
+			z-index:1;
+		}
+		#img li,#img a,#img img{
+			display:block;
+			width:470px;
+			height:150px;
+			padding:0;
+			border-width:0;
+			margin:0;
+			vertical-align:middle;/*解决IE7下每个li底部几像素空隙的问题*/
+		}
+		#btn{
+			position:absolute;
+			right:10px;
+			bottom:2px;
+			z-index:2;
+		}
+		#btn ul{
+			overflow:hidden;
+		}
+		#btn li{
+			float:left;
+		}
+		#btn a{
+			display:block;
+			width:18px;
+			height:18px;
+			border:1px solid #f47500;
+			margin:3px 10px;
+			line-height:18px;
+			background-color:#fcf2cf;
+			color:#b54a28;
+			font-size:14px;
+			text-align:center;
+			text-decoration:none;
+		}
+		#btn #active,#btn a:hover{
+			border-color:#ef713f;
+			color:#fff;
+			background-color:#ffb62f;
+		}
+
+	</style>
+	<script src="move.js"></script>
+	<script>
+		
+		window.onload = function(){
+			var oBox = document.getElementById("box");
+			var oImg = document.getElementById("img");
+			var oBtn = document.getElementById("btn").getElementsByTagName("a");
+			var oPic = oImg.getElementsByTagName("img")[0];
+			var h = parseInt(getStyle(oPic,"height"));
+			var len = oBtn.length;
+			var index = 0;
+			var timer = null;
+
+			for(var i=0;i<len;i++){
+				oBtn[i].index = i;
+				oBtn[i].onmouseover = function(){
+					autoMove(this.index);
+				};
+			}
+
+			//幻灯片动画效果函数
+			function autoMove(nIndex){
+				if(nIndex==index){return false}
+				move(oImg,"top",-h*nIndex,6);
+				var oActive = document.getElementById("active");
+				oActive.id = "";
+				oBtn[nIndex].id = "active";
+				index = nIndex;
+			}
+
+			timer = setInterval(function(){
+				autoMove((index+1)%len);
+			},2000);
+
+			oBox.onmouseover = function(){
+				clearInterval(timer);
+			};
+			oBox.onmouseout = function(){
+				timer = setInterval(function(){
+					autoMove((index+1)%len);
+				},2000);
+			};
+
+		};
+
+	</script>
+</head>
+<body>
+	<div id="box">
+		<div id="img">
+			<ul>
+				<li><a href="javascript:;"><img src="images/1.jpg" alt=""></a></li>
+				<li><a href="javascript:;"><img src="images/2.jpg" alt=""></a></li>
+				<li><a href="javascript:;"><img src="images/3.jpg" alt=""></a></li>
+				<li><a href="javascript:;"><img src="images/4.jpg" alt=""></a></li>
+				<li><a href="javascript:;"><img src="images/5.jpg" alt=""></a></li>
+			</ul>
+		</div>
+		<div id="btn">
+			<ul>
+				<li><a href="javascript:;" id="active">1</a></li>
+				<li><a href="javascript:;">2</a></li>
+				<li><a href="javascript:;">3</a></li>
+				<li><a href="javascript:;">4</a></li>
+				<li><a href="javascript:;">5</a></li>
+			</ul>
+		</div>
+	</div>
+</body>
+</html>

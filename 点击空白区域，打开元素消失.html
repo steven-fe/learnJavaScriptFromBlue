@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>点击空白区域，打开元素消失</title>
+	<style>
+		
+		*{
+			padding:0;
+			margin:0;
+		}
+		div{
+			display:none;
+			width:300px;
+			height:300px;
+			margin:100px auto 0;
+			background-color:red;
+		}
+
+	</style>
+	<script>
+		
+		window.onload = function(){
+			var oBtn = document.getElementsByTagName("button")[0];
+			var oDiv = document.getElementsByTagName("div")[0];
+
+			oBtn.onclick = function(event){
+				var e = event||window.event;
+				(e.stopPropagation)?(e.stopPropagation()):(e.cancelBubble = true);
+				oDiv.style.display = "block";
+			}
+
+			document.onclick = function(event){
+				var e = event||window.event;
+				console.log(e);
+				if((e.target!==oDiv)&&(oDiv.style.display==="block")){
+					oDiv.style.display = "none";
+				}
+			}
+		};
+
+	</script>
+</head>
+<body>
+	<button>按钮</button>
+	<div></div>
+</body>
+</html>
