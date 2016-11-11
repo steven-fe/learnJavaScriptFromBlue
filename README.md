@@ -1,2 +1,2 @@
-# learnJavaScriptFromBlue
-再次通过智能社blue老师的教学视频学习javascript时，敲下的代码
+##javascript视频（blue）总结
+***
