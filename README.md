@@ -247,6 +247,7 @@ var i = 0;
 ***
 ####JS运动基础
 * 获取表格元素（表格元素特殊的用法）
+<<<<<<< HEAD
 	* 缓冲运动：
 		* 速度=（目标值-当前值）/缩放系数
 		* 注意事项：但（目标值-当前值）大于一，而（目标值-当前）/缩放系数小于一时，采用向上（或者向下）四舍五入取整数的方式，使得当前值逐渐趋向于目标值。
@@ -267,3 +268,72 @@ var i = 0;
 ####JS运动应用
 * 多物体运动框架：所有东西都不能公用
 * offsetWidth:
+=======
+	* 缓冲运动
+<table>
+		<thead>
+			<tr>
+				<th>类型</th>
+				<th>前缀</th>
+				<th>类型</th>
+				<th>实例</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>数组</td>
+				<td>a</td>
+				<td>Array</td>
+				<td>aItems</td>
+			</tr>
+			<tr>
+				<td>布尔值</td>
+				<td>b</td>
+				<td>Boolean</td>
+				<td>bIsComplete</td>
+			</tr>
+			<tr>
+				<td>浮点数</td>
+				<td>f</td>
+				<td>Float</td>
+				<td>fPrice</td>
+			</tr>
+			<tr>
+				<td>整数</td>
+				<td>i</td>
+				<td>Integer</td>
+				<td>iItemCount</td>
+			</tr>
+			<tr>
+				<td>函数</td>
+				<td>fn</td>
+				<td>Function</td>
+				<td>fnHandler</td>
+			</tr>
+			<tr>
+				<td>对象</td>
+				<td>o</td>
+				<td>Object</td>
+				<td>oDiv1</td>
+			</tr>
+			<tr>
+				<td>正则表达式</td>
+				<td>re</td>
+				<td>RegExp</td>
+				<td>reEmailCheck</td>
+			</tr>
+			<tr>
+				<td>字符串</td>
+				<td>s</td>
+				<td>String</td>
+				<td>sUserName</td>
+			</tr>
+			<tr>
+				<td>变量变体</td>
+				<td>v</td>
+				<td>Variant</td>
+				<td>vAnyThing</td>
+			</tr>
+		</tbody>
+	</table>
+>>>>>>> origin/master
