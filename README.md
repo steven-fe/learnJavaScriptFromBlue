@@ -261,6 +261,16 @@
 	* 缓冲运动
 <table>
     <tr>
-        <td>Foo</td>
+        <td>Foo1</td>
+	<td>Foo2</td>
+	<td>Foo3</td>
+	<td>Foo4</td>
+    </tr>
+    
+    <tr>
+        <td>Bar1</td>
+	<td>Bar2</td>
+	<td>Bar3</td>
+	<td>Bar4</td>
     </tr>
 </table>
