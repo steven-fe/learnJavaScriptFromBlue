@@ -18,25 +18,25 @@
 	* while循环结构：
 	``` javascript
 
-		while(expression){
-			statement
-		}
+	while(expression){
+		statement
+	}
 	```
 	* while循环实例：声明并且初始化i=5，每次执行语句之后，i自增1；只要i小于5，将循环不断地执行循环体内的语句
 	``` javascript
-		var i = 0;
-		while(i<5){
-			alert(i);
-			i++;
-		}
+var i = 0;
+	while(i<5){
+		alert(i);
+		i++;
+	}
 	```
 * for循环
 	* for循环结构：
 	``` javascript
 
-		for(initialization; expression; post-loop-expression){
-			statement
-		}
+	for(initialization; expression; post-loop-expression){
+		statement
+	}
 	```
 	* for循环实例：声明并且初始化i=0，只要i小于5，将循环不断地执行循环体内的语句，执行完循环体内的语句之后，i自增1
 	``` javascript
@@ -61,17 +61,16 @@
 		* 主要使得数据转换成整数
 	``` javascript
 	
-		parseInt("123abc");//舍去字母部分，返回整数"123"
-		parseInt("abc123");//返回NaN
-		parseInt("123.123abc");//返回整数"123"
+	parseInt("123abc");//舍去字母部分，返回整数"123"
+	parseInt("abc123");//返回NaN
+	parseInt("123.123abc");//返回整数"123"
 	```
 	* parseFloat( )
 		* 主要使得数据转换成整数或浮点数
 	``` javascript
-	
-		parseFloat("123abc");//舍去字母部分，返回整数"123"
-		parseFloat("abc123");//返回NaN
-		parseFloat("123.123abc");//返回小数"123.123"
+	parseFloat("123abc");//舍去字母部分，返回整数"123"
+	parseFloat("abc123");//返回NaN
+	parseFloat("123.123abc");//返回小数"123.123"
 	```
 	* NaN
 		* NaN表示一个非数字的值
@@ -79,56 +78,46 @@
 	* 隐式类型转换
 		* ==、===区别："=="会进行等式两边变量的类型转换之后再比较大小；而"==="，则不会。
 		* 减法：减法会把减号两边的变量都转换为Number类型的数据之后，再执行减法运算
-	* 什么是闭包
+* 什么是闭包
 		* 子函数可以访问父函数局部作用域的变量
-	* 命名规范——变量名称前缀：（下表中的变量变体主要是在未确定变量数据类型时声明的一个变量）
-	| 类型|   前缀 |类型  |实例 |
-	| :-------- | --------:| :--: |
-	| 数组|a| Array| aItems|
-	| 布尔值  | b| Boolean| bIsComplete|
-    | 浮点数|f| Float|  fPrice  |
-	|函数|fn|Function|fnHandler|
-	|整数 | i|Integer|iItemCount|
-    | 对象|o|Object|oDiv1  |
-	|正则表达式|re|RegExp|reEmailCheck|
-	|字符串|s|String|sUserName|
-  |变量变体|v|Variant|vAnyThing|
- 	* 运算符
+* 命名规范——变量名称前缀：（下表中的变量变体主要是在未确定变量数据类型时声明的一个变量）
+<table>		<thead>			<tr>				<th>类型</th>				<th>前缀</th>				<th>类型</th>				<th>实例</th>			</tr>		</thead>		<tbody>			<tr>				<td>数组</td>				<td>a</td>				<td>Array</td>				<td>aItems</td>			</tr>			<tr>				<td>布尔值</td>				<td>b</td>				<td>Boolean</td>				<td>bIsComplete</td>			</tr>			<tr>				<td>浮点数</td>				<td>f</td>				<td>Float</td>				<td>fPrice</td>			</tr>			<tr>				<td>整数</td>				<td>i</td>				<td>Integer</td>				<td>iItemCount</td>			</tr>			<tr>				<td>函数</td>				<td>fn</td>				<td>Function</td>				<td>fnHandler</td>			</tr>			<tr>				<td>对象</td>				<td>o</td>				<td>Object</td>				<td>oDiv1</td>			</tr>			<tr>				<td>正则表达式</td>				<td>re</td>				<td>RegExp</td>				<td>reEmailCheck</td>			</tr>			<tr>				<td>字符串</td>				<td>s</td>				<td>String</td>				<td>sUserName</td>			</tr>			<tr>				<td>变量变体</td>				<td>v</td>				<td>Variant</td>				<td>vAnyThing</td>			</tr>		</tbody>	</table>
+	
+* 运算符
 		* 算术：+ 加、- 减、* 乘、/ 除、% 取模
 		* 赋值：=、+=、-=、*=、/=、%=
 		* 关系：<、>、<=、>=、==、===、!=、!==
-			* 关于比较的示例：
-``` javascript
-			
+		* 关于比较的示例：
+	``` javascript
 	Boolean(10>9>8==true);
 	//返回false
 	//该boolean值首先会执行"10>9"，返回true;
 	//然后再执行"true>8"，在"true>8"比较中，true会隐式转换为数字"1"，"1>8"返回false
 	//最后执行"false==true"，显然会返回false
 	//因此"Boolean(10>9>8==true)"，返回false。
-				
+	
 	```
-		* 逻辑：&&与、||或、!否
-			* ||：
- ``` javascript
-			
+
+* 逻辑：&&与、||或、!否
+	* ||：
+	```
 	var myObject = preferredObject||backupObject;
 	//此语句中，myObject会优先选择preferredObject，
-	//在Boolean(preferredObject)==false的情况下，myObject才会等于backupObject
-				
+	//在Boolean(preferredObject)==false的情况下，myObject才会等于backupObject		
 	```
-			* &&：
- ``` javascript
+	* &&：
+		``` javascript
 			
-	var myObject = preferredObject&&backupObject;
-	//此语句中，myObject会优先选择backupObject，
-	//在Boolean(preferredObject)==false的情况下，myObject才会等于preferredObject
+		var myObject = preferredObject&&backupObject;
+		//此语句中，myObject会优先选择backupObject，
+		//在Boolean(preferredObject)==false的情况下，myObject才会等于preferredObject
 				
-	```
-		* 运算符优先级：括号
-	* 三元运算符：(boolean_expression)?(true_value):(false_value);
-	* switch判断：
-	```javascript
+		```
+	* 运算符优先级：括号
+* 三元运算符：(boolean_expression)?(true_value):(false_value);
+* switch判断：
+```javascript
+
 	switch(expression){
 		case value:statement
 			break;
@@ -138,8 +127,8 @@
 			break;
 		default:statement
 	}
-   ```
-   * 什么是真，什么的假：
+  ```
+* 什么是真，什么的假：
 	   * 真：true、非0数字、非空对象、非空字符串
 	   * 假：false、数字0、空对象、空字符串、undefined
 
@@ -258,4 +247,23 @@
 ***
 ####JS运动基础
 * 获取表格元素（表格元素特殊的用法）
-	* 缓冲运动
+	* 缓冲运动：
+		* 速度=（目标值-当前值）/缩放系数
+		* 注意事项：但（目标值-当前值）大于一，而（目标值-当前）/缩放系数小于一时，采用向上（或者向下）四舍五入取整数的方式，使得当前值逐渐趋向于目标值。
+		```javascript
+		
+		var speed = (s>0)?(Math.ceil(s)):(Math.floor(s));
+	```
+	* 匀速运动：
+		* 停止条件：当最后一次运动时，速度>（目标值-当前值），直接设置当前值=目标值
+		```javascript
+		
+		if((targetValue-currentValue)<speed){
+			o.style[attr] = targetValue;
+		}
+		```
+
+***
+####JS运动应用
+* 多物体运动框架：所有东西都不能公用
+* offsetWidth:
